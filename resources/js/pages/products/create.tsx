@@ -31,6 +31,12 @@ const Create = () => {
         post('/products')
     };
 
+    function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
+        if (e.target.files && e.target.files.length > 0) {
+            setData ('image', e.target.files[0])
+        }
+    };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Create Product" />
@@ -60,7 +66,7 @@ const Create = () => {
                                 </div>
                                 <div className='grid gap-2'>
                                     <Label htmlFor='image'>Image:</Label>
-                                    <Input id='image' name='image' type='file' autoFocus tabIndex={4} />
+                                    <Input onChange={handleFile} id='image' name='image' type='file' autoFocus tabIndex={4} />
                                     <InputError message={errors.image} />
                                 </div>
                                 <Button type="submit" className="mt-4 w-fit" tabIndex={5} disabled={processing}>

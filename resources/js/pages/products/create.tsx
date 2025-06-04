@@ -19,11 +19,11 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const Create = () => {
 
-    const { data, setData, processing, post, errors, reset } = useForm({
+    const { data, setData, processing, post, errors } = useForm({
         name: '',
         description: '',
         price: '',
-        image: null as File | null
+        featured_image: null as File | null
     });
 
     function submit(e: React.FormEvent<HTMLFormElement>) {
@@ -33,7 +33,7 @@ const Create = () => {
 
     function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
         if (e.target.files && e.target.files.length > 0) {
-            setData ('image', e.target.files[0])
+            setData('featured_image', e.target.files[0])
         }
     };
 
@@ -65,9 +65,9 @@ const Create = () => {
                                     <InputError message={errors.price} />
                                 </div>
                                 <div className='grid gap-2'>
-                                    <Label htmlFor='image'>Image:</Label>
+                                    <Label htmlFor='featured_image'>Image:</Label>
                                     <Input onChange={handleFile} id='image' name='image' type='file' autoFocus tabIndex={4} />
-                                    <InputError message={errors.image} />
+                                    <InputError message={errors.featured_image} />
                                 </div>
                                 <Button type="submit" className="mt-4 w-fit" tabIndex={5} disabled={processing}>
                                     {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}

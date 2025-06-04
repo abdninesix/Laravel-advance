@@ -15,7 +15,9 @@ const Index = () => {
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Products" />
       <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
+
         <Link as='button' href={route('products.create')} className='w-fit p-2 text-blue-500 cursor-pointer'>Create Product</Link>
+        
         <div className='overflow-hidden shadow-lg rounded-xl p-2 '>
           <table className='w-full table-auto'>
             <thead>

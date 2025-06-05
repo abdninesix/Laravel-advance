@@ -16,7 +16,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return Inertia::render('products/index');
+        $products = Product::latest();
+        return Inertia::render('products/index', ['products'=>$products]);
     }
 
     /**
@@ -50,11 +51,12 @@ class ProductController extends Controller
         ]);
 
         if ($product) {
-            return redirect()->route('product.index')->with('success', 'Product created successfully');
+            return redirect()->route('products.index')->with('success', 'Product created successfully');
         }
             return redirect()->back()->with('error', 'Product failed to create');
         } catch (Exception $e) {
             Log::error('Product creation controller error: '.$e->getMessage());
+            return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
         }
     }
 

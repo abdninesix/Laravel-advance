@@ -26,9 +26,13 @@ const Create = () => {
         featured_image: null as File | null
     });
 
+    console.log(data)
+
     function submit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
-        post('/products')
+        post(route('products.store'), {
+            forceFormData: true
+        });
     };
 
     function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
@@ -66,7 +70,7 @@ const Create = () => {
                                 </div>
                                 <div className='grid gap-2'>
                                     <Label htmlFor='featured_image'>Image:</Label>
-                                    <Input onChange={handleFile} id='image' name='image' type='file' autoFocus tabIndex={4} />
+                                    <Input onChange={handleFile} id='featured_image' name='featured_image' type='file' autoFocus tabIndex={4} />
                                     <InputError message={errors.featured_image} />
                                 </div>
                                 <Button type="submit" className="mt-4 w-fit" tabIndex={5} disabled={processing}>

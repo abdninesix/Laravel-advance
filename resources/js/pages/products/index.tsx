@@ -11,12 +11,15 @@ const breadcrumbs: BreadcrumbItem[] = [
   },
 ];
 
-const Index = ({ products }: { products: any[] }) => {
-  // Get flash message from Inertia
+interface Product {
+  id: number, name: string, description: string, price: number, featured_image: string, featured_image_original_name: string, created_at: string,
+}
+
+const Index = ({ ...props }: { products: Product[] }) => {
+
+  const { products } = props;
   const { flash } = usePage<{ flash?: { success?: string; error?: string; } }>().props;
   const flashMessage = flash?.success || flash?.error;
-
-  // State for the toast message
   const [toast, setToast] = useState(flashMessage ? true : false);
 
   // Set timeout for toast disappearance
@@ -62,13 +65,13 @@ const Index = ({ products }: { products: any[] }) => {
             <tbody>
               {products.map((product, index) => (
                 <tr key={product.id}>
-                  <th>{index + 1}</th>
-                  <th>{product.name}</th>
-                  <th>{product.description}</th>
-                  <th>{product.price}</th>
-                  <th><img src={product.featured_image} alt={product.name} className='object-cover size-12' /></th>
-                  <th>{new Date(product.created_at).toLocaleDateString()}</th>
-                  <th>Edit and delete</th>
+                  <th className='p-2 border font-light'>{index + 1}</th>
+                  <th className='p-2 border font-light'>{product.name}</th>
+                  <th className='p-2 border font-light'>{product.description}</th>
+                  <th className='p-2 border font-light'>{product.price}</th>
+                  <th className='p-2 border font-light flex justify-center'><img src={`/storage/${product.featured_image}`} alt={product.featured_image_original_name} className='object-cover size-32' /></th>
+                  <th className='p-2 border font-light'>{new Date(product.created_at).toLocaleDateString()}</th>
+                  <th className='p-2 border font-light'>Edit and delete</th>
                 </tr>
               ))}
             </tbody>

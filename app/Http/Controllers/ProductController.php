@@ -16,8 +16,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::latest();
-        return Inertia::render('products/index', ['products'=>$products]);
+        $products = Product::latest()->get();
+        return Inertia::render('products/index', ['products' => $products,]);
     }
 
     /**
@@ -36,26 +36,26 @@ class ProductController extends Controller
         try {
             $image = null;
 
-        if ($request->file('featured_image')) {
-            $image = $request->file('featured_image');
-            $imageOriginalName = $image->getClientOriginalName();
-            $image = $image->store('products', 'public');
-        }
+            if ($request->file('featured_image')) {
+                $image = $request->file('featured_image');
+                $imageOriginalName = $image->getClientOriginalName();
+                $image = $image->store('products', 'public');
+            }
 
-        $product = Product::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'price' => $request->price,
-            'featured_image' => $image,
-            'featured_image_original_name' => $imageOriginalName,
-        ]);
+            $product = Product::create([
+                'name' => $request->name,
+                'description' => $request->description,
+                'price' => $request->price,
+                'featured_image' => $image,
+                'featured_image_original_name' => $imageOriginalName,
+            ]);
 
-        if ($product) {
-            return redirect()->route('products.index')->with('success', 'Product created successfully');
-        }
+            if ($product) {
+                return redirect()->route('products.index')->with('success', 'Product created successfully');
+            }
             return redirect()->back()->with('error', 'Product failed to create');
         } catch (Exception $e) {
-            Log::error('Product creation controller error: '.$e->getMessage());
+            Log::error('Product creation controller error: ' . $e->getMessage());
             return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
         }
     }

@@ -26,8 +26,6 @@ const Create = () => {
         featured_image: null as File | null
     });
 
-    console.log(data)
-
     function submit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault()
         post(route('products.store'), {

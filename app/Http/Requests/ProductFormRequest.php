@@ -25,7 +25,7 @@ class ProductFormRequest extends FormRequest
             'name' => 'required|string|max:20',
             'description' => 'required|string|max:300',
             'price' => 'required|numeric|min:0',
-            'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'featured_image' => 'required|image|mimes:jpeg,png,jpg|max:2048'
         ];
     }
 
@@ -41,6 +41,7 @@ class ProductFormRequest extends FormRequest
             'price.required' => 'Fix the price',
             'price.numeric' => 'Fix the price number only',
             'price.min' => 'Fix the price',
+            'featured_image.required' => 'Fix the image',
             'featured_image.image' => 'Fix the image file',
             'featured_image.mimes' => 'Fix the image format',
             'featured_image.max' => 'Fix the image size 2mb',

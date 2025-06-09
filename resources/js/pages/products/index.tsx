@@ -1,7 +1,9 @@
+import AppearanceToggleTab from '@/components/appearance-tabs';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
+import { Edit, Trash2Icon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -38,8 +40,10 @@ const Index = ({ ...props }: { products: Product[] }) => {
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title="Products" />
       <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-        <div className='flex'>
+        <div className='flex justify-between'>
           <Link as='button' href={route('products.create')} className='w-fit p-2 bg-blue-500 rounded-lg text-white cursor-pointer'>Create Product</Link>
+
+          <AppearanceToggleTab className='w-fit'/>
 
           {flashMessage && toast && (
             <Alert variant='default' className={`w-fit flex gap-2 ml-auto ${flash?.success ? 'bg-green-500' : 'bg-red-500'}`}>
@@ -69,9 +73,15 @@ const Index = ({ ...props }: { products: Product[] }) => {
                   <th className='p-2 border font-light'>{product.name}</th>
                   <th className='p-2 border font-light'>{product.description}</th>
                   <th className='p-2 border font-light'>{product.price}</th>
-                  <th className='p-2 border font-light flex justify-center'><img src={`/storage/${product.featured_image}`} alt={product.featured_image_original_name} className='object-cover size-32' /></th>
+                  <th className='p-2 border font-light flex justify-center'><img src={`/storage/${product.featured_image}`} alt={product.featured_image_original_name} className='object-contain size-32' /></th>
                   <th className='p-2 border font-light'>{new Date(product.created_at).toLocaleDateString()}</th>
-                  <th className='p-2 border font-light'>Edit and delete</th>
+                  <th className='p-2 border'>
+                    <div className='flex gap-2'>
+                      <Link href='/'><Edit/></Link>
+                    <Link href='/'><Trash2Icon/></Link>
+                    </div>
+                    
+                  </th>
                 </tr>
               ))}
             </tbody>

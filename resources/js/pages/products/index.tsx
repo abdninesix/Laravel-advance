@@ -1,9 +1,8 @@
-import AppearanceToggleTab from '@/components/appearance-tabs';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, Link, usePage } from '@inertiajs/react';
-import { Edit, Trash2Icon } from 'lucide-react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
+import { Edit, Eye, Trash2Icon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -22,7 +21,7 @@ const Index = ({ ...props }: { products: Product[] }) => {
   const { products } = props;
   const { flash } = usePage<{ flash?: { success?: string; error?: string; } }>().props;
   const flashMessage = flash?.success || flash?.error;
-  const [toast, setToast] = useState(flashMessage ? true : false);
+  const [toast, setToast] = useState(flashMessage ? flashMessage : false);
 
   // Set timeout for toast disappearance
   useEffect(() => {
@@ -42,8 +41,6 @@ const Index = ({ ...props }: { products: Product[] }) => {
       <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
         <div className='flex justify-between'>
           <Link as='button' href={route('products.create')} className='w-fit p-2 bg-blue-500 rounded-lg text-white cursor-pointer'>Create Product</Link>
-
-          <AppearanceToggleTab className='w-fit'/>
 
           {flashMessage && toast && (
             <Alert variant='default' className={`w-fit flex gap-2 ml-auto ${flash?.success ? 'bg-green-500' : 'bg-red-500'}`}>
@@ -70,17 +67,21 @@ const Index = ({ ...props }: { products: Product[] }) => {
               {products.map((product, index) => (
                 <tr key={product.id}>
                   <th className='p-2 border font-light'>{index + 1}</th>
-                  <th className='p-2 border font-light'>{product.name}</th>
-                  <th className='p-2 border font-light'>{product.description}</th>
+                  <th className='p-2 border font-light text-left'>{product.name}</th>
+                  {product.description ? <th className='p-2 border font-light text-left'>{product.description}</th> : <th className='p-2 border font-light text-left'>No description</th>}
                   <th className='p-2 border font-light'>{product.price}</th>
-                  <th className='p-2 border font-light flex justify-center'><img src={`/storage/${product.featured_image}`} alt={product.featured_image_original_name} className='object-contain size-32' /></th>
-                  <th className='p-2 border font-light'>{new Date(product.created_at).toLocaleDateString()}</th>
+                  <th className='p-2 border font-light flex justify-center'><img src={`/storage/${product.featured_image}`} alt={product.featured_image_original_name} className='object-contain h-16 w-16' /></th>
+                  <th className='p-2 border font-light'>{product.created_at}</th>
                   <th className='p-2 border'>
-                    <div className='flex gap-2'>
-                      <Link href='/'><Edit/></Link>
-                    <Link href='/'><Trash2Icon/></Link>
+                    <div className='flex justify-between'>
+                      <Link as='button' href={route('products.show', product.id)}><Eye /></Link>
+                      <Link as='button' href={route('products.edit', product.id)}><Edit /></Link>
+                      <button onClick={() => {
+                        if (confirm('Are you sure you want to delete this product?')) {
+                          router.delete(route('products.destroy', product.id), { preserveScroll: true })
+                        }
+                      }}><Trash2Icon /></button>
                     </div>
-                    
                   </th>
                 </tr>
               ))}

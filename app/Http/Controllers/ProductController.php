@@ -16,7 +16,15 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::latest()->get();
+        $products = Product::latest()->get()->map(fn($product) => [
+            'id' => $product->id,
+            'name' => $product->name,
+            'description' => $product->description,
+            'price' => $product->price,
+            'featured_image' => $product->featured_image,
+            'featured_image_original_name' => $product->featured_image_original_name,
+            'created_at' => $product->created_at->format('d M Y'),
+        ]);
         return Inertia::render('products/index', ['products' => $products,]);
     }
 
@@ -65,7 +73,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        //
+        return Inertia::render('products/create', ['product' => $product, 'isView' => true,]);
     }
 
     /**
@@ -73,15 +81,30 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        return Inertia::render('products/create', ['product' => $product, 'isEdit' => true,]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product)
+    public function update(ProductFormRequest $request, Product $product)
     {
-        //
+        if ($product) {
+            $product->name = $request->name;
+            $product->description = $request->description;
+            $product->price = $request->price;
+            if ($request->file('featured_image')) {
+                $image = $request->file('featured_image');
+                $imageOriginalName = $image->getClientOriginalName();
+                $image = $image->store('products', 'public');
+
+                $product->featured_image = $image;
+                $product->featured_image_original_name = $imageOriginalName;
+            }
+            $product->save();
+            return redirect()->route('products.index')->with('success', 'Product updated successfully');
+        }
+            return redirect()->back()->with('error', 'Product failed to update');
     }
 
     /**
@@ -89,6 +112,10 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        if ($product) {
+            $product->delete();
+            return redirect()->back()->with('success', 'Product deleted');
+        }
+            return redirect()->back()->with('error', 'Product failed to delete');
     }
 }
